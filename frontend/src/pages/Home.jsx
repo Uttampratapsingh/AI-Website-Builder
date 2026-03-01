@@ -1,9 +1,13 @@
-import React from 'react'
-import { motion } from "motion/react"
+import React, { useState } from 'react'
+import { motion,AnimatePresence } from "motion/react"
 import Hero from '../components/home/Hero'
 import Cards from '../components/home/Cards'
+import Login from '../components/home/Login';
 
 function Home() {
+  const [isLogin, setIsLogin] = useState(false);
+
+
   return (
     <div className="relative min-h-screen bg-[#040404] text-white overflow-hidden">
 
@@ -25,7 +29,7 @@ function Home() {
               Pricing
             </div>
 
-            <button className="px-4 py-2 rounded-lg border border-white/20 hover:bg-white/10 text-sm">
+            <button onClick={()=>setIsLogin(true)} className="px-4 py-2 rounded-lg border border-white/20 hover:bg-white/10 text-sm">
               Get Started
             </button>
 
@@ -40,6 +44,10 @@ function Home() {
       <footer className='border-t border-white/10 py-10 text-center text-sm text-zinc-500'>
         &copy; {new Date().getFullYear()} GetWeb.ai. All rights reserved.
       </footer>
+
+      <AnimatePresence mode="wait"> //exit animation wasnt working without. if you add it to Login component.
+        {isLogin && <Login setIsLogin={setIsLogin} />}
+      </AnimatePresence>
 
     </div>
   )
