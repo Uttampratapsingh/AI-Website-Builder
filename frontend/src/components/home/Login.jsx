@@ -1,14 +1,18 @@
 import {motion } from 'motion/react'
 import { X } from 'lucide-react';
 import toast from "react-hot-toast";
+import { useDispatch } from 'react-redux';
+import { setUserData } from '../../redux/userSlice.js';
 import { googleAuth } from '../../service/googleAuth.js';
 
 const Login = ({ setIsLogin }) => {
+    const dispatch = useDispatch();
 
     const handleGoogleAuth = async () => {
     try {
-      const { user,user_name } = await googleAuth();
+      const { user, user_name } = await googleAuth();
 
+      dispatch(setUserData(user));
       console.log("Google Auth Success:", user);
       toast.success(`Welcome, ${user_name}!`);
       setIsLogin(false);

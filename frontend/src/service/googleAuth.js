@@ -1,6 +1,6 @@
 import axios from "axios";
 import { signInWithPopup } from "firebase/auth";
-import { auth, provider } from "../config/firebase.js"; 
+import { auth, provider } from "../config/firebase.js";
 
 export const googleAuth = async () => {
   const response = await signInWithPopup(auth, provider);
@@ -17,11 +17,10 @@ export const googleAuth = async () => {
       withCredentials: true,
     }
   );
-
   console.log("Backend Google Auth Response:", data);
 
   return {
     user_name: response.user.displayName,
-    user: data,
+    user: data.user,
   };
 };
