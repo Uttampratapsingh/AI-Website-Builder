@@ -35,3 +35,5 @@ const generateResponse = async (prompt) => {
   console.log("OpenRouter API Response recieved:", data);
   return data.choices[0].message.content;
 };
+
+export {generateResponse};
