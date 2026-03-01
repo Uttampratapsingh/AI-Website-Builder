@@ -74,3 +74,22 @@ export const generateWebsite = async (req, res) => {
         res.status(500).json({error: 'Failed to generate website'});
     }
 }
+
+
+
+export const getWebsitesById = async (req, res) => {
+    console.log('Get website by ID controller called');
+    try {
+        const website = await Website.findById({
+            _id: req.params.id,
+            user: req.user._id
+            });
+        if (!website) {
+            return res.status(404).json({ error: 'Website not found' });
+        }
+        res.status(200).json(website);
+    } catch (error) {
+        console.error('Error fetching website by ID:', error);
+        res.status(500).json({ error: 'Failed to fetch website' });
+    }
+}

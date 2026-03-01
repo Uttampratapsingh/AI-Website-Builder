@@ -5,8 +5,8 @@ import useCurrentUser from './hooks/getCurrentUser.js';
 import { useSelector } from 'react-redux';
 import Dashboard from './pages/Dashboard';
 import Generate from './pages/Generate';
-import { Navigate } from 'react-router-dom';
 import { LoaderCircle } from 'lucide-react';
+import Editor from './pages/Editor.jsx';
 
 
 const App = () => {
@@ -38,6 +38,11 @@ const App = () => {
         <Route
           path="/generate"
           element={userData ? <Generate /> : <Home/>}
+        />
+
+        <Route
+          path="/editor/:id"
+          element={userData ? <Editor /> : <Home/>}
         />
       </Routes>
     </BrowserRouter>

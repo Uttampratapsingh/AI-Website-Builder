@@ -1,6 +1,28 @@
 import { motion } from 'motion/react'
+import { useState } from 'react';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+
 
 const Input = () => {
+  const [prompt, setPrompt] = useState("");
+
+  const handleGenerateWebsite = async () => {
+    try {
+
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/website/generate`, { prompt },{withCredentials: true });
+      console.log('Website generated:', response.data);
+      toast.success('Website generated successfully! Redirecting to editor...');
+      setTimeout(() => {
+        window.location.href = `/editor/${response.data.websiteId}`;
+      }, 2000);
+    } catch (error) {
+      console.error('Error generating website:', error);
+      toast.error(error.response?.data?.error || 'Failed to generate website. Please try again.');
+    }
+  }
+
+
   return (
     <div className="max-w-6xl mx-auto px-6 py-16">
         <motion.div className='text-center mb-16' initial={{opacity: 0, y:30}} animate={{opacity: 1, y:0}} transition={{duration: 0.5}}>
@@ -20,6 +42,8 @@ const Input = () => {
               id=""
               placeholder="Describe your website in detail..."
               className="w-full h-56 p-6 rounded-3xl bg-black/60 border border-white/10 outline-none resize-none text-sm leading-relaxed focus:ring-2 focus:ring-white/20"
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
             />
           </div>
         </div>
@@ -29,6 +53,7 @@ const Input = () => {
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
             className="px-6 py-2 rounded-2xl font-semibold text-lg bg-zinc-200 text-black hover:bg-zinc-200 transition"
+            onClick={handleGenerateWebsite}
           >
             Generate Website
           </motion.button>
