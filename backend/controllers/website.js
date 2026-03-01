@@ -168,3 +168,15 @@ export const changeWebsite = async (req, res) => {
         res.status(500).json({ error: 'Failed to change website' });
     }
 }
+
+
+export const getAllWebsites = async (req, res) => {
+    console.log('Get all websites controller called');
+    try {
+        const websites = await Website.find({user: req.user._id}).sort({createdAt: -1}); // sort by newest first
+        res.status(200).json(websites);
+    } catch (error) {
+        console.error('Error fetching all websites:', error);
+        res.status(500).json({ error: 'Failed to fetch websites' });
+    }
+}
