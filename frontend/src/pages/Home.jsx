@@ -73,7 +73,7 @@ function Home() {
               <div className='relative cursor-pointer'>
                 <button className='flex items-center gap-2' onClick={()=>setOpenProfile(!openProfile)}>
                   <p className='hidden md:inline text-sm text-zinc-200'>{userData.name}</p>
-                  <img src={userData.avatar || `https://ui-avatars.com/api/?name=${userData.name}`} alt="User Avatar" className="w-8 h-8 rounded-full border border-white/20 object-cover" />
+                  <img src={userData.avatar || `https://ui-avatars.com/api/?name=${userData.name}`} referrerPolicy='no-referrer' alt="User Avatar" className="w-8 h-8 rounded-full border border-white/20 object-cover" />
                 </button>
                 
                 <AnimatePresence>

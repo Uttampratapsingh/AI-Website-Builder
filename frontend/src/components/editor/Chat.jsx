@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Chat = ({conversation}) => {
+const Chat = ({conversation, thinkingStep, updateLoading}) => {
   return (
     <div className='flex-1 overflow-y-auto px-2 py-4 space-y-4'>
       {conversation.map((message, index) => (
@@ -10,6 +10,13 @@ const Chat = ({conversation}) => {
           </div>
         </div>
       ))}
+      {updateLoading && (
+        <div className="max-w-[85%] mr-auto">
+          <div className="px-4 py-2.5 rounded-2xl text-xs bg-white/5 border border-white/10 text-zinc-400 italic animate-pulse">
+            {thinkingStep}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

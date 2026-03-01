@@ -7,6 +7,7 @@ import { useRef } from 'react';
 import Preview from '../components/editor/Preview.jsx';
 import Input from '../components/editor/Input.jsx';
 import toast from 'react-hot-toast';
+import ThinkingSteps from '../data/ThinkingSteps';
 
 
 const Editor = () => {
@@ -18,6 +19,7 @@ const Editor = () => {
   const[message, setMessage] = useState([]);
   const[code, setCode] = useState("");
   const[prompt, setPrompt] = useState("");
+  const[updateLoading, setUpdateLoading] = useState(false);
 
   useEffect(()=>{
     const getWebsite = async () => {
@@ -50,20 +52,39 @@ const Editor = () => {
 
 
   const handleUpdate = async () => {
-    console.log('Updating website with prompt:', prompt);
-    setMessage((m)=>[...m,{role: "user", content: prompt}]);
+    setUpdateLoading(true);
+    const trimmedPrompt = prompt.trim();
+    setPrompt("");
+    if(!trimmedPrompt) {
+      toast.error("Prompt cannot be empty");
+      setUpdateLoading(false);
+      return;
+    }
+    console.log('Updating website with prompt:', trimmedPrompt);
+    setMessage((m)=>[...m,{role: "user", content: trimmedPrompt}]);
     try {
       console.log('website id:', id);
-      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/website/update/${id}`,{prompt},{withCredentials: true});
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/website/update/${id}`,{prompt: trimmedPrompt},{withCredentials: true});
       console.log('Website updated:', response.data);
-      setPrompt("");
       setCode(response.data.code);
       setMessage((m)=>[...m,{role: "ai", content: response.data.message}]);
     } catch (error) {
       toast.error("Failed to update website");
       console.error('Error updating website:', error);
+    }finally{
+      setUpdateLoading(false);
     }
   }
+
+  const [thinkingIndex, setThinkingIndex] = useState(0);
+
+  useEffect(()=>{
+    if(!updateLoading) return;
+    const interval = setInterval(() => {
+      setThinkingIndex((prev) => (prev + 1) % ThinkingSteps.length);
+    }, 2000);
+    return () => clearInterval(interval);
+  },[updateLoading])
 
 
   if(error){
@@ -87,8 +108,8 @@ const Editor = () => {
       <div className='h-screen w-screen flex bg-black text-white overflow-hidden'>
         <aside className='hidden lg:flex w-[380px] flex-col border-r border-white/10 bg-black/80'>
           <Header title={website.title}/>
-          <Chat conversation={message}/>
-          <Input prompt={prompt} setPrompt={setPrompt} handleUpdate={handleUpdate}/>
+          <Chat conversation={message} thinkingStep={ThinkingSteps[thinkingIndex]} updateLoading={updateLoading}/>
+          <Input prompt={prompt} setPrompt={setPrompt} handleUpdate={handleUpdate} updateLoading={updateLoading}/>
         </aside>
         <Preview iframeRef={iframeRef}/>
       </div>
