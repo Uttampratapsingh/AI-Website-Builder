@@ -8,6 +8,7 @@ import { CirclePlus, Coins } from 'lucide-react';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import { setUserData } from '../redux/userSlice';
+import { useNavigate } from 'react-router-dom';
 
 
 function Home() {
@@ -18,6 +19,8 @@ function Home() {
   const[openProfile, setOpenProfile] = useState(false);
   const dispatch = useDispatch();
 
+  const navigate = useNavigate();
+
   const handleLogout = async (e) => {
     e.preventDefault();
     try {
@@ -27,6 +30,8 @@ function Home() {
     } catch (error) {
       toast.error("Logout failed. Please try again.");
       console.error("Logout Error:", error);
+    }finally{
+      navigate("/");
     }
   }
 
@@ -88,7 +93,7 @@ function Home() {
                           <CirclePlus className='w-3 h-3 -ml-1'/>
                         </button>
 
-                        <button className='w-full px-4 py-3 text-left text-sm hover:bg-white/5'>
+                        <button onClick={()=>navigate('/dashboard')} className='w-full px-4 py-3 text-left text-sm hover:bg-white/5'>
                           Dashboard
                         </button>
 
@@ -107,7 +112,7 @@ function Home() {
         </div>
       </motion.div>
 
-      <Hero/>
+      <Hero navigate={navigate} userData={userData} setIsLogin={setIsLogin}/>
 
       <Cards/>
 

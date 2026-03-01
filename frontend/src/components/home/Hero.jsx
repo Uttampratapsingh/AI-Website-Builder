@@ -1,5 +1,5 @@
 import { motion } from "motion/react"
-const Hero = () => {
+const Hero = ({ navigate,userData,setIsLogin }) => {
   return (
     <section className="pt-44 pb-32 px-6 text-center">
 
@@ -28,6 +28,7 @@ const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1 }}
+            onClick={() => userData ? navigate("/dashboard") : setIsLogin(true)}
             className="mt-10 px-6 py-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-xl hover:from-purple-600 hover:to-blue-600 transition-colors"
         >
             Get Started
