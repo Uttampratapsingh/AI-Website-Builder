@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 import authRouter from './routes/auth.js';
 import cookieParser from 'cookie-parser';
+import userRouter from './routes/user.js';
 
 
 dotenv.config();
@@ -27,6 +28,7 @@ app.get('/', (req, res) => {
 
 
 app.use('/api/auth', authRouter);
+app.use('/api/user', userRouter);
 
 
 app.listen(PORT, () => {
