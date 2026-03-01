@@ -3,11 +3,13 @@ import { motion,AnimatePresence } from "motion/react"
 import Hero from '../components/home/Hero'
 import Cards from '../components/home/Cards'
 import Login from '../components/home/Login';
+import { useSelector } from 'react-redux';
 
 function Home() {
   const [isLogin, setIsLogin] = useState(false);
-
-
+  const {userData} = useSelector((state) => state.user);
+  
+console.log("User Data from Redux:", userData);
   return (
     <div className="relative min-h-screen bg-[#040404] text-white overflow-hidden">
 
@@ -29,9 +31,16 @@ function Home() {
               Pricing
             </div>
 
-            <button onClick={()=>setIsLogin(true)} className="px-4 py-2 rounded-lg border border-white/20 hover:bg-white/10 text-sm">
-              Get Started
-            </button>
+            {!userData ?
+              <button onClick={()=>setIsLogin(true)} className="px-4 py-2 rounded-lg border border-white/20 hover:bg-white/10 text-sm">
+                Get Started
+              </button>
+
+            :
+              <button className='flex item-center'>
+                <img src={userData.avatar} alt="User Avatar" className="w-8 h-8 rounded-full border border-white/20 object-cover" />
+              </button>
+            }
 
           </div>
         </div>

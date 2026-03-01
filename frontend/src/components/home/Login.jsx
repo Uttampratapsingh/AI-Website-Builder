@@ -10,10 +10,10 @@ const Login = ({ setIsLogin }) => {
 
     const handleGoogleAuth = async () => {
     try {
-      const { user, user_name } = await googleAuth();
+      const { data, user_name } = await googleAuth();
 
-      dispatch(setUserData(user));
-      console.log("Google Auth Success:", user);
+      dispatch(setUserData(data.user));
+      console.log("Google Auth Success:", data.user);
       toast.success(`Welcome, ${user_name}!`);
       setIsLogin(false);
 

@@ -11,8 +11,8 @@ function getCurrentUser(){
         const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/user/me`, {
           withCredentials: true // Include credentials (cookies) in the request
         });
-        dispatch(setUserData(response.data));
-        console.log("Current user response:", response.data);
+        dispatch(setUserData(response.data.user));
+        console.log("Current user response:", response.data.user);
       } catch (error) {
         console.error("Error fetching current user:", error);
       }

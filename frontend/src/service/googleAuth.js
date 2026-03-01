@@ -21,6 +21,6 @@ export const googleAuth = async () => {
 
   return {
     user_name: response.user.displayName,
-    user: data.user,
+    data,
   };
 };
