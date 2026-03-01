@@ -104,12 +104,15 @@ export const changeWebsite = async (req, res) => {
         if(!prompt) {
             return res.status(400).json({error: 'Prompt is required'});
         }
+        console.log('Prompt received for update:', prompt);
 
         const websiteId = req.params.id;
+        console.log('Website ID received for update:', websiteId);
         const website = await Website.findOne({_id: websiteId, user: req.user._id});
         if(!website) {
             return res.status(404).json({error: 'Website not found'});
         }
+        console.log('Website found for update');
 
         const user = await User.findById(req.user._id);
         if(!user) {

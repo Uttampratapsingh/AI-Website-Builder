@@ -6,7 +6,7 @@ import { changeWebsite, generateWebsite, getAllWebsites, getWebsitesById } from 
 const websiteRouter = express.Router();
 
 websiteRouter.post("/generate",isAuth, generateWebsite);
-websiteRouter.post("/update",isAuth, changeWebsite);
+websiteRouter.post("/update/:id",isAuth, changeWebsite);
 
 websiteRouter.get("/get-by-id/:id",isAuth, getWebsitesById);
 websiteRouter.get("/get-all",isAuth, getAllWebsites);

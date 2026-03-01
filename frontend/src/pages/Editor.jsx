@@ -6,6 +6,7 @@ import Chat from '../components/editor/Chat.jsx';
 import { useRef } from 'react';
 import Preview from '../components/editor/Preview.jsx';
 import Input from '../components/editor/Input.jsx';
+import toast from 'react-hot-toast';
 
 
 const Editor = () => {
@@ -14,6 +15,9 @@ const Editor = () => {
   const [website, setWebsite] = useState(null);
   const [error, setError] = useState("");
   const iframeRef = useRef(null);
+  const[message, setMessage] = useState([]);
+  const[code, setCode] = useState("");
+  const[prompt, setPrompt] = useState("");
 
   useEffect(()=>{
     const getWebsite = async () => {
@@ -21,6 +25,8 @@ const Editor = () => {
         const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/website/get-by-id/${id}`,{withCredentials: true});
         console.log('Website fetched:', response.data); 
         setWebsite(response.data);
+        setCode(response.data.latestCode);
+        setMessage(response.data.conversation);
       } catch (error) {
         console.error('Error fetching website:', error);
         setError(error.response?.data?.message || 'An error occurred while fetching the website.');
@@ -31,16 +37,33 @@ const Editor = () => {
 
 
   useEffect(()=>{
-    if(!iframeRef.current || !website?.latestCode) return; // Ensure the iframe and latestCode are available
+    if(!iframeRef.current || !code) return; // Ensure the iframe and latestCode are available
 
     // Create a blob URL for the latest code
-    const blob = new Blob([website.latestCode], { type: 'text/html' }); // blob means binary large object, it can hold any type of data, in this case we are holding the html code of the website
+    const blob = new Blob([code], { type: 'text/html' }); // blob means binary large object, it can hold any type of data, in this case we are holding the html code of the website
     const url = URL.createObjectURL(blob);
     iframeRef.current.src = url;
     return () => {
       URL.revokeObjectURL(url); // Clean up the blob URL when the component unmounts or when latestCode changes
     };
-  },[website?.latestCode])
+  },[code])
+
+
+  const handleUpdate = async () => {
+    console.log('Updating website with prompt:', prompt);
+    setMessage((m)=>[...m,{role: "user", content: prompt}]);
+    try {
+      console.log('website id:', id);
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/website/update/${id}`,{prompt},{withCredentials: true});
+      console.log('Website updated:', response.data);
+      setPrompt("");
+      setCode(response.data.code);
+      setMessage((m)=>[...m,{role: "ai", content: response.data.message}]);
+    } catch (error) {
+      toast.error("Failed to update website");
+      console.error('Error updating website:', error);
+    }
+  }
 
 
   if(error){
@@ -64,8 +87,8 @@ const Editor = () => {
       <div className='h-screen w-screen flex bg-black text-white overflow-hidden'>
         <aside className='hidden lg:flex w-[380px] flex-col border-r border-white/10 bg-black/80'>
           <Header title={website.title}/>
-          <Chat conversation={website.conversation}/>
-          <Input/>
+          <Chat conversation={message}/>
+          <Input prompt={prompt} setPrompt={setPrompt} handleUpdate={handleUpdate}/>
         </aside>
         <Preview iframeRef={iframeRef}/>
       </div>
