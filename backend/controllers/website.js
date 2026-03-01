@@ -3,6 +3,7 @@ import Website from "../models/website.js";
 import User from "../models/user.js";
 import { buildMasterPrompt } from "../Template/prompt.js";
 import extractJson from "../utils/extractJson.js";
+import buildUpdatePrompt from "../Template/updatePrompt.js";
 
 export const generateWebsite = async (req, res) => {
     console.log('Generating website controller called');
@@ -91,5 +92,79 @@ export const getWebsitesById = async (req, res) => {
     } catch (error) {
         console.error('Error fetching website by ID:', error);
         res.status(500).json({ error: 'Failed to fetch website' });
+    }
+}
+
+
+export const changeWebsite = async (req, res) => {
+    console.log('Change website controller called');
+    try {
+
+        const {prompt} = req.body;
+        if(!prompt) {
+            return res.status(400).json({error: 'Prompt is required'});
+        }
+
+        const websiteId = req.params.id;
+        const website = await Website.findOne({_id: websiteId, user: req.user._id});
+        if(!website) {
+            return res.status(404).json({error: 'Website not found'});
+        }
+
+        const user = await User.findById(req.user._id);
+        if(!user) {
+            return res.status(401).json({error: 'Unauthorized'});
+        }
+
+        if(!user.credits || user.credits < 25){
+            return res.status(403).json({error: 'Not enough credits. Each website change costs 25 credits.'});
+        }
+
+        const updatePrompt = buildUpdatePrompt(prompt, website.latestCode);
+
+        let raw = "";
+        let parsed = null;
+        // generate two times to ensure we get a valid response
+        for(let i=0; i<2 && !parsed; i++) {
+            raw = await generateResponse(updatePrompt);
+            parsed = await extractJson(raw);
+            if(!parsed){
+                raw = await generateResponse("\n\n RETURN ONLY RAW JSON "+updatePrompt);
+                parsed = await extractJson(raw);
+            }else{
+                break;
+            }
+        }
+
+        if(!parsed || !parsed.code){
+            console.error('Failed to parse JSON after multiple attempts. Raw response:', raw);
+            return res.status(500).json({error: 'Failed to generate website. Please try again.'});
+        }
+
+        website.latestCode = parsed.code || website.latestCode;
+        website.conversation.push(
+            {
+                role: "user",
+                content: prompt
+            },
+            {
+                role: "ai",
+                content: parsed.message
+            }
+        )
+        await website.save();
+
+        user.credits -= 25;
+        await user.save();
+
+        res.status(200).json({
+            message: parsed.message,
+            code: parsed.code,
+            remainingCredits: user.credits
+        });
+
+    } catch (error) {
+        console.error('Error changing website:', error);
+        res.status(500).json({ error: 'Failed to change website' });
     }
 }
