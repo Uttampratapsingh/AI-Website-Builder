@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { setUserData } from '../../redux/userSlice.js';
 import { googleAuth } from '../../service/googleAuth.js';
 
-const Login = ({ setIsLogin }) => {
+const Login = ({ setIsLogin,setOpenProfile }) => {
     const dispatch = useDispatch();
 
     const handleGoogleAuth = async () => {
@@ -16,7 +16,7 @@ const Login = ({ setIsLogin }) => {
       console.log("Google Auth Success:", data.user);
       toast.success(`Welcome, ${user_name}!`);
       setIsLogin(false);
-
+      setOpenProfile(false);
     } catch (error) {
       toast.error("Google authentication failed. Please try again.");
       console.error("Google Auth Error:", error);

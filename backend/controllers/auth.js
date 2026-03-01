@@ -32,7 +32,8 @@ export const googleAuth = async (req,res) =>{
             httpOnly:true, // Prevents client-side JavaScript from accessing the cookie
             secure:process.env.NODE_ENV === 'production', // Set secure flag in production
             sameSite:'strict',
-            maxAge:7*24*60*60*1000 // 7 days in milliseconds
+            maxAge:7*24*60*60*1000, // 7 days in milliseconds
+            path:'/' // Ensure the cookie is available across the entire site
         })
 
         res.status(201).json({ message: "User Login successfully", user, token });
@@ -49,7 +50,8 @@ export const logout = (req,res) =>{
         res.clearCookie("token",{
             httpOnly:true,
             secure:process.env.NODE_ENV === 'production',
-            sameSite:'strict'
+            sameSite:'strict',
+            path:'/' // Ensure the cookie is cleared for the correct path
         });
         res.status(200).json({ message: "Logout successful" });
     } catch (error) {
