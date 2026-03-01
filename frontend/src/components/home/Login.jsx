@@ -1,7 +1,24 @@
 import {motion } from 'motion/react'
 import { X } from 'lucide-react';
+import toast from "react-hot-toast";
+import { googleAuth } from '../../service/googleAuth.js';
 
 const Login = ({ setIsLogin }) => {
+
+    const handleGoogleAuth = async () => {
+    try {
+      const { user,user_name } = await googleAuth();
+
+      console.log("Google Auth Success:", user);
+      toast.success(`Welcome, ${user_name}!`);
+      setIsLogin(false);
+
+    } catch (error) {
+      toast.error("Google authentication failed. Please try again.");
+      console.error("Google Auth Error:", error);
+    }
+  };
+
   return (
         <motion.div
           className="fixed inset-0 z-100 flex items-center justify-center bg-black/80 backdrop-blur-xl px-4"
@@ -52,6 +69,7 @@ const Login = ({ setIsLogin }) => {
                         whileHover={{ scale: 1.04 }}
                         whileTap={{ scale: 0.96 }}
                         className="group relative w-full h-13 rounded-xl bg-white text-black font-semibold shadow-xl overflow-hidden mt-2"
+                        onClick={handleGoogleAuth}
                         >
                         <div className="relative flex items-center justify-center gap-3">
                             <img
