@@ -21,10 +21,12 @@ app.use(cors({
   origin: process.env.FRONTEND_URL, // Allow requests from the frontend URL
   credentials: true, // Allow cookies to be sent
 }));
+
+// Stripe webhook must be before express.json() to receive raw body for signature verification
+app.post('/api/stripe/webhook', express.raw({type: 'application/json'}), stripeWebhook);
+
 app.use(express.json());
 app.use(cookieParser());
-
-app.post('/api/stripe/webhook',express.raw({type: 'application/json'},stripeWebhook));
 
 
 app.get('/', (req, res) => {
