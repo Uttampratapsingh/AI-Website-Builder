@@ -1,4 +1,4 @@
-import { plans } from "../Template/plans";
+import {plans}  from "../Template/plans.js";
 
 
 export const billing = async (req, res) => {

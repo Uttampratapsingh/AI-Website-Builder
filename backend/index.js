@@ -6,6 +6,7 @@ import authRouter from './routes/auth.js';
 import cookieParser from 'cookie-parser';
 import userRouter from './routes/user.js';
 import websiteRouter from './routes/website.js';
+import billingRouter from './routes/billing.js';
 
 
 dotenv.config();
