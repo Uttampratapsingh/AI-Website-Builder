@@ -31,7 +31,7 @@ export const googleAuth = async (req,res) =>{
         res.cookie("token", token,{
             httpOnly:true, // Prevents client-side JavaScript from accessing the cookie
             secure:process.env.NODE_ENV === 'production', // Set secure flag in production
-            sameSite:'strict',
+            sameSite:'none',
             maxAge:7*24*60*60*1000, // 7 days in milliseconds
             path:'/' // Ensure the cookie is available across the entire site
         })
@@ -50,7 +50,7 @@ export const logout = (req,res) =>{
         res.clearCookie("token",{
             httpOnly:true,
             secure:process.env.NODE_ENV === 'production',
-            sameSite:'strict',
+            sameSite:'none',
             path:'/' // Ensure the cookie is cleared for the correct path
         });
         res.status(200).json({ message: "Logout successful" });

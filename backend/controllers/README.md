@@ -8,7 +8,6 @@ A full-stack web application that lets users **describe a website in plain Engli
 
 - [Overview](#overview)
 - [Features](#features)
-- [Screenshots](#screenshots)
 - [Tech Stack](#tech-stack)
 - [Project Structure](#project-structure)
 - [Getting Started](#getting-started)
@@ -108,8 +107,8 @@ GetWeb.ai is an end-to-end platform that turns natural language descriptions int
 ### Dashboard
 ![Dashboard](screenshots/dashboard.png)
 
-### Preview
-![Site Preview](screenshots/preview.png)
+### Site Preview
+![Site Preview](screenshots/site-preview.png)
 
 ---
 
