@@ -10,7 +10,7 @@ import { useState } from 'react';
 const Pricing = () => {
     const navigate = useNavigate();
     const {userData} = useSelector((state) => state.user);
-    const [loading,setLoading] = useState(false);
+    const [loading,setLoading] = useState(null);
 
     const handleBuy = async (planKey) =>{
         if(!userData){
@@ -24,18 +24,18 @@ const Pricing = () => {
         }
 
         try {
-            setLoading(true);
+            setLoading(planKey);
             console.log('inside the handleBuy function, planKey: ', planKey);
             const response = await Axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/billing`, {
                 planType: planKey,
             },{withCredentials: true});
-            console.log("Billing response: ", response);
+            toast.success("Redirecting to payment...");
             window.location.href = response.data.sessionUrl;
         } catch (error) {
             alert("Error purchasing plan. Please try again.",error);
             toast.error("Error purchasing plan. Please try again.");
         }finally{
-            setLoading(false);
+            setLoading(null);
         }
 
     }

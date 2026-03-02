@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import userRouter from './routes/user.js';
 import websiteRouter from './routes/website.js';
 import billingRouter from './routes/billing.js';
+import { stripeWebhook } from './controllers/stripeWebhook.js';
 
 
 dotenv.config();
@@ -22,6 +23,8 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(cookieParser());
+
+app.post('/api/stripe/webhook',express.raw({type: 'application/json'},stripeWebhook));
 
 
 app.get('/', (req, res) => {
