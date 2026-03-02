@@ -8,6 +8,7 @@ import Generate from './pages/Generate';
 import { LoaderCircle } from 'lucide-react';
 import Editor from './pages/Editor.jsx';
 import LiveSite from './pages/LiveSite.jsx';
+import Pricing from './pages/Pricing.jsx';
 
 
 const App = () => {
@@ -39,6 +40,11 @@ const App = () => {
         <Route
           path="/generate"
           element={userData ? <Generate /> : <Home/>}
+        />
+
+        <Route
+          path="/pricing"
+          element={<Pricing />}
         />
 
         <Route

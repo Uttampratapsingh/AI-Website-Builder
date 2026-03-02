@@ -52,12 +52,12 @@ function Home() {
 
           <div className="flex items-center gap-5">
 
-            <div className="hidden md:inline text-sm text-zinc-400 hover:text-white cursor-pointer">
+            <div onClick={()=> navigate('/pricing')} className="hidden md:inline text-sm text-zinc-400 hover:text-white cursor-pointer">
               Pricing
             </div>
 
             {userData && (
-                <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-sm cursor-pointer hover:bg-white/10 transition">
+                <div onClick={()=>navigate('/pricing')} className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-sm cursor-pointer hover:bg-white/10 transition">
                   <Coins size={14} className="text-yellow-400" />
                   <span className="text-zinc-300">Credits</span>
                   <span>{userData.credits}</span>
@@ -86,7 +86,7 @@ function Home() {
                           <p className='text-xs text-zinc-500 truncate'>{userData.email}</p>
                         </div>
 
-                        <button className='md:hidden w-full px-4 py-3 flex items-center gap-2 text-sm border-b border-white/10 hover:bg-white/5'>
+                        <button onClick={()=>navigate("/pricing")} className='md:hidden w-full px-4 py-3 flex items-center gap-2 text-sm border-b border-white/10 hover:bg-white/5'>
                           <Coins size={14} className='text-yellow-400' />
                           <span className='text-zinc-300'>Credits</span>
                           <span>{userData.credits}</span>

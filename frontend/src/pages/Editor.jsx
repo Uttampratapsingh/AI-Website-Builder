@@ -12,6 +12,7 @@ import ShowCode from '../components/editor/ShowCode.jsx';
 import { AnimatePresence } from 'motion/react';
 import FullPreview from '../components/editor/FullPreview.jsx';
 import ShowChat from '../components/editor/ShowChat.jsx';
+import { deployWebsite } from '../service/deployWebsite.js';
 
 
 const Editor = () => {
@@ -94,6 +95,17 @@ const Editor = () => {
   },[updateLoading])
 
 
+  const handleDeploy = async (id) => {
+    try {
+      const url = await deployWebsite(id);
+      window.open(url, "_blank");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to deploy website");
+    }
+  };
+
+
   if(error){
     return(
       <div className='h-screen flex items-center justify-center bg-black text-red-400'>
@@ -118,7 +130,7 @@ const Editor = () => {
           <Chat conversation={message} thinkingStep={ThinkingSteps[thinkingIndex]} updateLoading={updateLoading}/>
           <Input prompt={prompt} setPrompt={setPrompt} handleUpdate={handleUpdate} updateLoading={updateLoading}/>
         </aside>
-        <Preview iframeRef={iframeRef} setShowCode={setShowCode} showCode={showCode} showFullPreview={showFullPreview}   setShowFullPreview={setShowFullPreview} showChat={showChat} setShowChat={setShowChat}/>
+        <Preview w={website} handleDeploy={handleDeploy} iframeRef={iframeRef} setShowCode={setShowCode} showCode={showCode} showFullPreview={showFullPreview}   setShowFullPreview={setShowFullPreview} showChat={showChat} setShowChat={setShowChat}/>
       </div>
 
 

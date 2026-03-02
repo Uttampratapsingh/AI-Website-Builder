@@ -1,44 +1,9 @@
-import { Check, Rocket, Share2 } from 'lucide-react'
-import {motion} from 'motion/react'
-import axios from 'axios';
-import toast from 'react-hot-toast';
-import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import DeployButton from '../utils/DeployButton';
+import {motion} from 'motion/react';
 
 const Header = ({userData,loading,error,websites}) => {
-
-  const [copiedLink, setCopiedLink] = useState('');
-
-
-  const handleDeploy = async (id) => {
-      try {
-        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/website/deploy/${id}`, {
-          withCredentials: true,
-        });
-        if (response.data.url) {
-          window.open(response.data.url, "_blank");
-        } else {
-          throw new Error("Failed to deploy website");
-        }
-      } catch (error) {
-        console.error("Error deploying website:", error);
-        toast.error("Failed to deploy website");
-      }
-  }
-
-
-  const handleCopyLink = (link) => {
-    navigator.clipboard.writeText(link)
-      .then(() => {
-        setCopiedLink(link);
-        setTimeout(() => setCopiedLink(''), 2000); // Reset after 2 seconds
-        toast.success("Link copied to clipboard!");
-      })
-
-      .catch((err) => {
-        console.error('Failed to copy link: ', err);
-        toast.error("Failed to copy link");
-      });
-  }
+  const navigate = useNavigate();
 
 
   return (
@@ -66,6 +31,7 @@ const Header = ({userData,loading,error,websites}) => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.05 }}
                 whileHover={{ y: -6 }}
+                onClick={()=> navigate(`/editor/${w._id}`)}
                 className="rounded-2xl bg-white/5 border border-white/10 overflow-hidden hover:bg-white/10 transition flex flex-col"
               >
 
@@ -91,33 +57,7 @@ const Header = ({userData,loading,error,websites}) => {
                     {new Date(w.updatedAt).toLocaleDateString()}
                   </p>
 
-                  {!w.deployed ? (
-                    <button
-                      className="mt-auto flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-gradient-to-r from-indigo-500 to-purple-500 hover:scale-105 transition"
-                      onClick={() => handleDeploy(w._id)}
-                    >
-                      <Rocket size={18} />
-                      Deploy
-                    </button>
-                  ) : (
-                    <motion.button
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => handleCopyLink(w.deployUrl)}
-                      className={`
-                        mt-auto flex items-center justify-center gap-2
-                        px-4 py-2 rounded-xl text-sm font-medium
-                        transition-all border
-                        ${
-                          copiedLink === w.deployUrl
-                            ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"
-                            : "bg-white/10 hover:bg-white/20 border-white/10"
-                        }
-                      `}
-                    >                      
-                      {copiedLink === w.deployUrl ? <Check size={18} /> : <Share2 size={18} />}
-                      {copiedLink === w.deployUrl ? "Copied!" : "Share Link"}
-                    </motion.button>
-                  )}
+                  <DeployButton w = {w}/>
 
                 </div>
               </motion.div>

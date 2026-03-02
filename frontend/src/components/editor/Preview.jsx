@@ -1,8 +1,9 @@
 import { Rocket, Code2, Monitor, MessageSquare } from 'lucide-react';
+import DeployButton from '../utils/DeployButton';
 
 
 
-const Preview = ({iframeRef,setShowCode,showCode,setShowFullPreview,showFullPreview,showChat,setShowChat}) => {
+const Preview = ({iframeRef,setShowCode,showCode,setShowFullPreview,showFullPreview,showChat,setShowChat,w}) => {
   return (
     <div className="flex-1 flex flex-col">
 
@@ -12,10 +13,7 @@ const Preview = ({iframeRef,setShowCode,showCode,setShowFullPreview,showFullPrev
 
           <div className="flex gap-2">
 
-            <button className="flex items-center gap-2 px-4 py-1.5 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 text-sm font-semibold hover:scale-105 transition">
-              <Rocket size={14} />
-              Deploy
-            </button>
+            <DeployButton w={w} />
 
             <button className='lg:hidden p-2 hover:bg-white/10 rounded-md transition' onClick={()=>setShowChat(!showChat)}>
               <MessageSquare size={18} />
