@@ -1,5 +1,3 @@
-import React from 'react'
-
 const Chat = ({conversation, thinkingStep, updateLoading}) => {
   return (
     <div className='flex-1 overflow-y-auto px-2 py-4 space-y-4'>

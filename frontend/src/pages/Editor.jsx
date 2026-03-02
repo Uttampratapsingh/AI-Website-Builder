@@ -8,6 +8,8 @@ import Preview from '../components/editor/Preview.jsx';
 import Input from '../components/editor/Input.jsx';
 import toast from 'react-hot-toast';
 import ThinkingSteps from '../data/ThinkingSteps';
+import ShowCode from '../components/editor/ShowCode.jsx';
+import { AnimatePresence } from 'motion/react';
 
 
 const Editor = () => {
@@ -20,6 +22,7 @@ const Editor = () => {
   const[code, setCode] = useState("");
   const[prompt, setPrompt] = useState("");
   const[updateLoading, setUpdateLoading] = useState(false);
+  const [showCode, setShowCode] = useState(false);
 
   useEffect(()=>{
     const getWebsite = async () => {
@@ -111,8 +114,12 @@ const Editor = () => {
           <Chat conversation={message} thinkingStep={ThinkingSteps[thinkingIndex]} updateLoading={updateLoading}/>
           <Input prompt={prompt} setPrompt={setPrompt} handleUpdate={handleUpdate} updateLoading={updateLoading}/>
         </aside>
-        <Preview iframeRef={iframeRef}/>
+        <Preview iframeRef={iframeRef} setShowCode={setShowCode} showCode={showCode}/>
       </div>
+
+      <AnimatePresence>
+        {showCode && <ShowCode code={code} setShowCode={setShowCode} setCode={setCode}/>}
+      </AnimatePresence>
     </>
   )
 }

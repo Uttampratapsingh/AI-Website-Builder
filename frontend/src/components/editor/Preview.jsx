@@ -2,7 +2,7 @@ import { Rocket, Code2, Monitor } from 'lucide-react';
 
 
 
-const Preview = ({iframeRef}) => {
+const Preview = ({iframeRef,setShowCode,showCode}) => {
   return (
     <div className="flex-1 flex flex-col">
 
@@ -17,7 +17,7 @@ const Preview = ({iframeRef}) => {
               Deploy
             </button>
 
-            <button className="p-2 hover:bg-white/10 rounded-md transition">
+            <button onClick={()=>setShowCode(!showCode)} className="p-2 hover:bg-white/10 rounded-md transition">
               <Code2 size={18} />
             </button>
 
