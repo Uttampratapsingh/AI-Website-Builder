@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard';
 import Generate from './pages/Generate';
 import { LoaderCircle } from 'lucide-react';
 import Editor from './pages/Editor.jsx';
+import LiveSite from './pages/LiveSite.jsx';
 
 
 const App = () => {
@@ -42,7 +43,13 @@ const App = () => {
 
         <Route
           path="/editor/:id"
+
           element={userData ? <Editor /> : <Home/>}
+        />
+        
+        <Route
+          path="/live-site/:id"
+          element={<LiveSite/>}
         />
       </Routes>
     </BrowserRouter>

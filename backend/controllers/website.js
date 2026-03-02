@@ -183,3 +183,45 @@ export const getAllWebsites = async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch websites' });
     }
 }
+
+
+export const deployWebsite = async (req, res) => {
+    try {
+        const websiteId = req.params.id;
+        const user = req.user._id;
+
+        const website = await Website.findOne({_id: websiteId, user});
+        if(!website) {
+            return res.status(404).json({error: 'Website not found'});
+        }
+
+        if(!website.slug){
+            website.slug = website.title.toLowerCase().replace(/\s+/g, '-').slice(0,50) + '-' + website._id.toString().slice(-5); 
+        }
+
+        website.deployed = true;
+        website.deployUrl=`${process.env.FRONTEND_URL}/live-site/${website.slug}`;
+        await website.save();
+
+        res.status(200).json({url: website.deployUrl});
+
+    } catch (error) {
+        console.error('Error deploying website:', error);
+        res.status(500).json({ error: 'Failed to deploy website' });
+    }
+}
+
+export const getBySlug = async (req, res) => {
+    try {
+        const website = await Website.findOne({slug: req.params.slug, user: req.user._id});
+
+        if(!website) {
+            return res.status(404).json({error: 'Website not found'});
+        }
+        
+        res.status(200).json(website);
+    } catch (error) {
+        console.error('Error fetching website by slug:', error);
+        res.status(500).json({ error: 'Failed to fetch website by slug' });
+    }
+}

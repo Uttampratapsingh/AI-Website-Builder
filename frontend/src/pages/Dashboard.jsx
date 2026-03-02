@@ -10,6 +10,7 @@ const Dashboard = () => {
   const [websites, setWebsites] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  
 
   useEffect(() => {
     const fetchWebsites = async () => {
@@ -20,7 +21,7 @@ const Dashboard = () => {
         });
         setWebsites(response?.data || []);
       } catch (error) {
-        setError('Failed to fetch websites. Please try again later.',error.message);
+        setError('Failed to fetch websites. Please try again later.');
         console.error('Error fetching websites:', error);
       } finally {
         setLoading(false);
