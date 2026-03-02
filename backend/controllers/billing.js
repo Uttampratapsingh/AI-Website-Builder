@@ -1,4 +1,5 @@
 import {plans}  from "../Template/plans.js";
+import stripe from "../config/stripe.js";
 
 
 export const billing = async (req, res) => {
@@ -8,12 +9,14 @@ export const billing = async (req, res) => {
         console.log("Plan type: ", planType);
         const userId = req.user._id;
         const plan = plans[planType];
+        console.log("Plan details: ", plan);
         if(!plan || plan.price==0) {
             return res.status(400).json({message: "Invalid plan type"});
         }
-
-        const session = stripe.checkout.sessions.create({
+        console.log("Creating Stripe session for user: ", userId, " with plan: ", planType);
+        const session = await stripe.checkout.sessions.create({
             mode: 'payment',
+            ui_mode: 'hosted',
             payment_method_types: ['card'],
             line_items: [
                 {
@@ -27,15 +30,16 @@ export const billing = async (req, res) => {
                     quantity: 1,
                 }
             ],
+            success_url: `${process.env.FRONTEND_URL}/`,
+            cancel_url: `${process.env.FRONTEND_URL}/pricing`,
             metadata:{
                 userId: userId.toString(),
                 credits: plan.credits,
                 plan: plan.plan,
-                success_url: `${process.env.FRONTEND_URL}/`,
-                cancel_url: `${process.env.FRONTEND_URL}/pricing`
-    
             }
         })
+
+        console.log("Stripe session created: ", session);
 
         return res.status(200).json({sessionUrl: session.url});
 

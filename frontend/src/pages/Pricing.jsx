@@ -2,10 +2,43 @@ import { ArrowLeft, Check, Coins } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import plans from '../data/Plan';
+import { useSelector } from 'react-redux';
+import Axios from 'axios';
+import { toast } from 'react-hot-toast';
+import { useState } from 'react';
 
 const Pricing = () => {
     const navigate = useNavigate();
-    
+    const {userData} = useSelector((state) => state.user);
+    const [loading,setLoading] = useState(false);
+
+    const handleBuy = async (planKey) =>{
+        if(!userData){
+            alert("Please login to purchase a plan.");
+            navigate("/");
+            return;
+        }
+        if(planKey === "free"){
+            navigate("/dashboard");
+            return;
+        }
+
+        try {
+            setLoading(true);
+            console.log('inside the handleBuy function, planKey: ', planKey);
+            const response = await Axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/billing`, {
+                planType: planKey,
+            },{withCredentials: true});
+            console.log("Billing response: ", response);
+            window.location.href = response.data.sessionUrl;
+        } catch (error) {
+            alert("Error purchasing plan. Please try again.",error);
+            toast.error("Error purchasing plan. Please try again.");
+        }finally{
+            setLoading(false);
+        }
+
+    }
     
 
     return (
@@ -101,6 +134,8 @@ const Pricing = () => {
 
                         <motion.button
                         whileTap={{ scale: 0.96 }}
+                        disabled={loading}
+                        onClick={() => handleBuy(p.key)}
                         className={`
                             w-full py-3 rounded-xl font-semibold transition
                             ${
@@ -111,7 +146,7 @@ const Pricing = () => {
                             disabled:opacity-60
                         `}
                         >
-                        {p.button}
+                        {loading===p.key ? "Processing..." : p.button}
                     </motion.button>
 
                 </motion.div>
