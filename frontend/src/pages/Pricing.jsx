@@ -8,7 +8,7 @@ const Pricing = () => {
     
     
 
-  return (
+    return (
     <div className="relative min-h-screen overflow-hidden bg-[#050505] text-white px-6 pt-16 pb-24">
         {/* Background Blurs */}
         <div className="absolute inset-0 pointer-events-none">
@@ -22,9 +22,9 @@ const Pricing = () => {
             >
             <ArrowLeft size={16} />
             Back
-            </button>
+        </button>
 
-            <motion.div
+        <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             className="relative z-10 max-w-4xl mx-auto text-center mb-14"

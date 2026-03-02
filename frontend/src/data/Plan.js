@@ -32,7 +32,7 @@ const plans = [
     key: "enterprise",
     name: "Enterprise",
     price: "₹1499",
-    credits: 1000,
+    credits: 2000,
     description: "For teams & power users",
     features: [
       "Unlimited iterations",
