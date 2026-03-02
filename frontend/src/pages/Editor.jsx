@@ -10,6 +10,8 @@ import toast from 'react-hot-toast';
 import ThinkingSteps from '../data/ThinkingSteps';
 import ShowCode from '../components/editor/ShowCode.jsx';
 import { AnimatePresence } from 'motion/react';
+import FullPreview from '../components/editor/FullPreview.jsx';
+import ShowChat from '../components/editor/ShowChat.jsx';
 
 
 const Editor = () => {
@@ -23,6 +25,9 @@ const Editor = () => {
   const[prompt, setPrompt] = useState("");
   const[updateLoading, setUpdateLoading] = useState(false);
   const [showCode, setShowCode] = useState(false);
+  const [thinkingIndex, setThinkingIndex] = useState(0);
+  const [showFullPreview, setShowFullPreview] = useState(false);
+  const [showChat, setShowChat] = useState(false);
 
   useEffect(()=>{
     const getWebsite = async () => {
@@ -79,7 +84,6 @@ const Editor = () => {
     }
   }
 
-  const [thinkingIndex, setThinkingIndex] = useState(0);
 
   useEffect(()=>{
     if(!updateLoading) return;
@@ -114,11 +118,21 @@ const Editor = () => {
           <Chat conversation={message} thinkingStep={ThinkingSteps[thinkingIndex]} updateLoading={updateLoading}/>
           <Input prompt={prompt} setPrompt={setPrompt} handleUpdate={handleUpdate} updateLoading={updateLoading}/>
         </aside>
-        <Preview iframeRef={iframeRef} setShowCode={setShowCode} showCode={showCode}/>
+        <Preview iframeRef={iframeRef} setShowCode={setShowCode} showCode={showCode} showFullPreview={showFullPreview}   setShowFullPreview={setShowFullPreview} showChat={showChat} setShowChat={setShowChat}/>
       </div>
+
+
+
+      <AnimatePresence>
+        {showChat && <ShowChat setShowChat={setShowChat} title={website.title} conversation={message} thinkingStep={ThinkingSteps[thinkingIndex]} updateLoading={updateLoading} prompt={prompt} setPrompt={setPrompt} handleUpdate={handleUpdate}/>}
+      </AnimatePresence>
 
       <AnimatePresence>
         {showCode && <ShowCode code={code} setShowCode={setShowCode} setCode={setCode}/>}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showFullPreview && <FullPreview code={code} setShowFullPreview={setShowFullPreview}/>}
       </AnimatePresence>
     </>
   )
